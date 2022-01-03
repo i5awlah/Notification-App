@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import com.example.notificationapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -18,15 +19,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.apply {
-            btnShow.setOnClickListener {
-                val notification = etNotifications.text.toString()
-                etNotifications.text.clear()
-                showNotification(notification)
-            }
+        // When the Button is clicked, count down 5 seconds then show a notification indicating that the food is ready
+        binding.btnStart.setOnClickListener {
+            Handler().postDelayed({
+                showNotification()
+            }, 5000)
         }
     }
-    private fun showNotification(notification: String) {
+
+    private fun showNotification() {
         val channelId = "myapp.notifications"
         val description = "Notification App Example"
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -42,14 +43,14 @@ class MainActivity : AppCompatActivity() {
             builder = Notification.Builder(this, channelId)
                 .setSmallIcon(R.drawable.ic_baseline_notifications_active_24)
                 .setContentIntent(pendingIntent)
-                .setContentTitle("My Notification")
-                .setContentText(notification)
+                .setContentTitle("Egg Cooking Counter")
+                .setContentText("Ready")
         } else {
             builder = Notification.Builder(this)
                 .setSmallIcon(R.drawable.ic_baseline_notifications_active_24)
                 .setContentIntent(pendingIntent)
-                .setContentTitle("My Notification")
-                .setContentText(notification)
+                .setContentTitle("Egg Cooking Counter")
+                .setContentText("Ready")
         }
         notificationManager.notify(1234, builder.build())
     }
